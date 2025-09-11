@@ -42,8 +42,13 @@ router.post('/execute', requireRole(['student', 'admin']), (req, res) => {
       }
     }
 
-    // Execute command using bash simulator
-    const simulator = new BashSimulator();
+    // Get or create simulator instance for this session
+    let simulator = req.app.get(`simulator_${sessionId}`);
+    if (!simulator) {
+      simulator = new BashSimulator();
+      req.app.set(`simulator_${sessionId}`, simulator);
+    }
+    
     const result = simulator.executeCommand(command);
 
     // Log the command and result
@@ -77,7 +82,13 @@ router.get('/pwd/:sessionId', requireRole(['student', 'admin']), (req, res) => {
       return res.status(404).json({ error: 'Active session not found' });
     }
 
-    const simulator = new BashSimulator();
+    // Get or create simulator instance for this session
+    let simulator = req.app.get(`simulator_${sessionId}`);
+    if (!simulator) {
+      simulator = new BashSimulator();
+      req.app.set(`simulator_${sessionId}`, simulator);
+    }
+    
     const result = simulator.executeCommand('pwd');
     res.json(result);
   });
