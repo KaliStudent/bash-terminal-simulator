@@ -17,6 +17,77 @@ router.get('/students', requireRole(['admin']), (req, res) => {
   );
 });
 
+// Create new student
+router.post('/students', requireRole(['admin']), (req, res) => {
+  const { username, email, password } = req.body;
+
+  if (!username || !email || !password) {
+    return res.status(400).json({ error: 'Username, email, and password are required' });
+  }
+
+  // Validate email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ error: 'Invalid email format' });
+  }
+
+  // Validate password strength
+  if (password.length < 6) {
+    return res.status(400).json({ error: 'Password must be at least 6 characters long' });
+  }
+
+  const bcrypt = require('bcryptjs');
+  const hashedPassword = bcrypt.hashSync(password, 10);
+
+  db.run(
+    'INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)',
+    [username, email, hashedPassword, 'student'],
+    function(err) {
+      if (err) {
+        if (err.message.includes('UNIQUE constraint failed')) {
+          return res.status(400).json({ error: 'Username or email already exists' });
+        }
+        return res.status(500).json({ error: 'Database error' });
+      }
+
+      res.status(201).json({
+        message: 'Student created successfully',
+        student: {
+          id: this.lastID,
+          username,
+          email,
+          role: 'student'
+        }
+      });
+    }
+  );
+});
+
+// Delete student
+router.delete('/students/:id', requireRole(['admin']), (req, res) => {
+  const { id } = req.params;
+
+  // First check if student exists
+  db.get('SELECT id FROM users WHERE id = ? AND role = "student"', [id], (err, student) => {
+    if (err) {
+      return res.status(500).json({ error: 'Database error' });
+    }
+
+    if (!student) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+
+    // Delete the student
+    db.run('DELETE FROM users WHERE id = ?', [id], function(err) {
+      if (err) {
+        return res.status(500).json({ error: 'Database error' });
+      }
+
+      res.json({ message: 'Student deleted successfully' });
+    });
+  });
+});
+
 // Get student activity
 router.get('/students/:id/activity', requireRole(['admin']), (req, res) => {
   const { id } = req.params;
