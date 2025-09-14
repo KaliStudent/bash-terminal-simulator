@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import Terminal from './Terminal';
+import SimulatorFrame from './SimulatorFrame';
 import TestSelector from './TestSelector';
+import './SimulatorFrame.css';
 
 const StudentInterface = () => {
   const { user, logout } = useAuth();
@@ -140,9 +141,11 @@ const StudentInterface = () => {
           {testInfo.time_limit && <p><strong>Time Limit:</strong> {testInfo.time_limit} minutes</p>}
         </div>
       )}
-      <div className="terminal-container">
-        <Terminal sessionId={currentSession?.id} />
-      </div>
+      <SimulatorFrame 
+        sessionId={currentSession?.id} 
+        user={user}
+        sessionType={currentSession?.type || 'practice'}
+      />
     </div>
   );
 };

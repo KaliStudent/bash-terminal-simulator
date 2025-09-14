@@ -80,6 +80,12 @@ const Terminal = ({ sessionId }) => {
       setHistory(prev => [...prev, errorEntry]);
     } finally {
       setLoading(false);
+      // Refocus the input after command execution
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
+      }, 100);
     }
   };
 
@@ -105,7 +111,7 @@ const Terminal = ({ sessionId }) => {
     if (entry.type === 'command') {
       return (
         <div key={index} className="terminal-line">
-          <span className="terminal-prompt">user@bash:~$ </span>
+          <span className="terminal-prompt">user@bash:{currentDir}$ </span>
           <span>{entry.content}</span>
         </div>
       );
@@ -128,7 +134,7 @@ const Terminal = ({ sessionId }) => {
       </div>
       
       <div className="terminal-input-line">
-        <span className="terminal-prompt">user@bash:~$ </span>
+        <span className="terminal-prompt">user@bash:{currentDir}$ </span>
         <input
           ref={inputRef}
           type="text"

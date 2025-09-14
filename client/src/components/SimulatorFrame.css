@@ -1,0 +1,366 @@
+/* Simulator Frame Layout */
+.simulator-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background: #1a1a1a;
+  color: #ffffff;
+  font-family: 'Droid Sans Mono for Powerline Plus Nerd File Types Mono', 'Courier New', monospace;
+}
+
+/* Left Info Panel - 15% width */
+.info-panel {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 15%;
+  height: 100vh;
+  background: #2d2d2d;
+  border-right: 2px solid #404040;
+  padding: 20px;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.info-section {
+  margin-bottom: 30px;
+  padding: 15px;
+  background: #3a3a3a;
+  border-radius: 8px;
+  border: 1px solid #555;
+}
+
+.info-section h3 {
+  margin: 0 0 15px 0;
+  color: #4a9eff;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.info-item, .config-item {
+  margin-bottom: 10px;
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.config-item label {
+  color: #cccccc;
+}
+
+.config-item input[type="checkbox"] {
+  accent-color: #4a9eff;
+}
+
+.error-item {
+  margin-bottom: 8px;
+  padding: 8px;
+  background: #4a1a1a;
+  border-left: 3px solid #ff4444;
+  border-radius: 4px;
+}
+
+.error-time {
+  font-size: 10px;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.error-message {
+  font-size: 11px;
+  color: #ff6666;
+}
+
+/* Main Terminal Frame - 75% width */
+.terminal-frame {
+  margin-left: 15%;
+  width: 75%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.terminal-header {
+  background: #2d2d2d;
+  padding: 10px 20px;
+  border-bottom: 2px solid #404040;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.terminal-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #4a9eff;
+}
+
+.terminal-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #888;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  background: #00ff00;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+/* Terminal Styling */
+.terminal {
+  flex: 1;
+  background: #1a1a1a;
+  padding: 20px;
+  overflow-y: auto;
+  font-family: 'Droid Sans Mono for Powerline Plus Nerd File Types Mono', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #FFFFFF; /* Terminal text color */
+}
+
+.terminal-output {
+  margin-bottom: 10px;
+}
+
+.terminal-line {
+  margin-bottom: 2px;
+  word-wrap: break-word;
+}
+
+.terminal-input-line {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+/* Custom Prompt Styling */
+.terminal-prompt {
+  color: #1046f5;
+  font-weight: bold;
+  margin-right: 8px;
+  white-space: nowrap;
+}
+
+.prompt-char {
+  color: #4a9eff;
+  font-size: 16px;
+  margin-right: 2px;
+  text-shadow: 0 0 5px rgba(74, 158, 255, 0.5);
+}
+
+/* Prompt Background Effect */
+.prompt-bg {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-opacity='0.1'%3E%3Cpath d='M50 0L100 50L50 100L0 50z' fill='%234a9eff'/%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.1;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+/* Terminal Input */
+.terminal-input {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-family: 'Droid Sans Mono for Powerline Plus Nerd File Types Mono', 'Courier New', monospace;
+  font-size: 14px;
+  outline: none;
+  flex: 1;
+  padding: 0;
+  margin: 0;
+}
+
+.terminal-input::placeholder {
+  color: #666;
+}
+
+/* Terminal Output Styling */
+.terminal-success {
+  color: #00ff00;
+}
+
+.terminal-error {
+  color: #ff4444;
+}
+
+/* AI-Edit Editor Styling */
+.ai-edit-output {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 4px;
+  margin: 10px 0;
+  padding: 10px;
+}
+
+.ai-edit-content {
+  color: #00FFFF; /* Cyan color for editor text */
+  white-space: pre-wrap;
+  font-family: 'Droid Sans Mono for Powerline Plus Nerd File Types Mono', 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.3;
+  margin: 0;
+  padding: 0;
+}
+
+/* Style different sections of the editor */
+.ai-edit-content .editor-header {
+  color: #FFFF00; /* Yellow for headers */
+  font-weight: bold;
+}
+
+.ai-edit-content .editor-ui {
+  color: #FFFF00; /* Yellow for UI elements */
+}
+
+.ai-edit-content .editor-shortcuts {
+  color: #FFFF00; /* Yellow for shortcuts */
+  font-weight: bold;
+}
+
+/* Editor content lines */
+.ai-edit-content .editor-line {
+  color: #00FFFF; /* Cyan for content lines */
+}
+
+/* Editor borders and boxes */
+.ai-edit-content .editor-box {
+  color: #FFFF00; /* Yellow for box characters */
+}
+
+/* Editor status and info */
+.ai-edit-content .editor-status {
+  color: #FFFF00; /* Yellow for status info */
+}
+
+/* Bottom Instructions Panel */
+.instructions-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  max-height: 30vh;
+  background: #2d2d2d;
+  border-top: 2px solid #404040;
+  padding: 20px;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.instructions-panel h3 {
+  margin: 0 0 15px 0;
+  color: #4a9eff;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.instructions-content {
+  color: #cccccc;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.instructions-content h4 {
+  color: #4a9eff;
+  margin: 0 0 10px 0;
+  font-size: 14px;
+}
+
+.instructions-content ul {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.instructions-content li {
+  margin-bottom: 5px;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .info-panel {
+    width: 20%;
+  }
+  
+  .terminal-frame {
+    margin-left: 20%;
+    width: 80%;
+  }
+}
+
+@media (max-width: 768px) {
+  .simulator-container {
+    flex-direction: column;
+  }
+  
+  .info-panel {
+    position: relative;
+    width: 100%;
+    height: auto;
+    max-height: 200px;
+  }
+  
+  .terminal-frame {
+    margin-left: 0;
+    width: 100%;
+    height: calc(100vh - 200px);
+  }
+  
+  .instructions-panel {
+    position: relative;
+    max-height: 150px;
+  }
+}
+
+/* Scrollbar Styling */
+.terminal::-webkit-scrollbar,
+.info-panel::-webkit-scrollbar,
+.instructions-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.terminal::-webkit-scrollbar-track,
+.info-panel::-webkit-scrollbar-track,
+.instructions-panel::-webkit-scrollbar-track {
+  background: #2d2d2d;
+}
+
+.terminal::-webkit-scrollbar-thumb,
+.info-panel::-webkit-scrollbar-thumb,
+.instructions-panel::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 4px;
+}
+
+.terminal::-webkit-scrollbar-thumb:hover,
+.info-panel::-webkit-scrollbar-thumb:hover,
+.instructions-panel::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
+/* Animation for clear command */
+.terminal.clearing {
+  animation: clearScreen 0.3s ease-in-out;
+}
+
+@keyframes clearScreen {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
