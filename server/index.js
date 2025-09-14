@@ -1,3 +1,4 @@
+require('dotenv').config({ path: './server/.env' });
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -8,6 +9,7 @@ const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
 const studentRoutes = require('./routes/student');
 const terminalRoutes = require('./routes/terminal');
+const aiRoutes = require('./routes/ai');
 const { initializeDatabase } = require('./database/init');
 const { authenticateToken } = require('./middleware/auth');
 
@@ -47,6 +49,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/admin', authenticateToken, adminRoutes);
 app.use('/api/student', authenticateToken, studentRoutes);
 app.use('/api/terminal', authenticateToken, terminalRoutes);
+app.use('/api/ai', authenticateToken, aiRoutes);
 
 // Serve React app
 app.get('*', (req, res) => {

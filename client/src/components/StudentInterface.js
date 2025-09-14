@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import Terminal from './Terminal';
 import TestSelector from './TestSelector';
+import Chat from './Chat';
 
 const StudentInterface = () => {
   const { user, logout } = useAuth();
@@ -140,8 +141,13 @@ const StudentInterface = () => {
           {testInfo.time_limit && <p><strong>Time Limit:</strong> {testInfo.time_limit} minutes</p>}
         </div>
       )}
-      <div className="terminal-container">
-        <Terminal sessionId={currentSession?.id} />
+      <div className="main-content" style={{ display: 'flex', height: 'calc(100vh - 150px)' }}>
+        <div className="terminal-container" style={{ flex: '2', marginRight: '10px' }}>
+          <Terminal sessionId={currentSession?.id} />
+        </div>
+        <div className="chat-container" style={{ flex: '1' }}>
+          <Chat />
+        </div>
       </div>
     </div>
   );
