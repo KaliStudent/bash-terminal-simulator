@@ -5,6 +5,13 @@ const Students = () => {
   const [loading, setLoading] = useState(true);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [studentActivity, setStudentActivity] = useState([]);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [creating, setCreating] = useState(false);
+  const [createForm, setCreateForm] = useState({
+    username: '',
+    email: '',
+    password: ''
+  });
 
   useEffect(() => {
     fetchStudents();
@@ -51,6 +58,68 @@ const Students = () => {
     fetchStudentActivity(student.id);
   };
 
+  const handleCreateStudent = async (e) => {
+    e.preventDefault();
+    
+    if (!createForm.username || !createForm.email || !createForm.password) {
+      alert('Please fill in all fields');
+      return;
+    }
+
+    setCreating(true);
+    try {
+      const response = await fetch('/api/admin/students', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(createForm)
+      });
+
+      if (response.ok) {
+        await fetchStudents();
+        setShowCreateForm(false);
+        setCreateForm({ username: '', email: '', password: '' });
+        alert('Student created successfully!');
+      } else {
+        const error = await response.json();
+        alert(error.error || 'Failed to create student');
+      }
+    } catch (error) {
+      console.error('Failed to create student:', error);
+      alert('Failed to create student');
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  const handleDeleteStudent = async (studentId) => {
+    if (!window.confirm('Are you sure you want to delete this student? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/admin/students/${studentId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (response.ok) {
+        await fetchStudents();
+        alert('Student deleted successfully!');
+      } else {
+        const error = await response.json();
+        alert(error.error || 'Failed to delete student');
+      }
+    } catch (error) {
+      console.error('Failed to delete student:', error);
+      alert('Failed to delete student');
+    }
+  };
+
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleString();
   };
@@ -63,10 +132,73 @@ const Students = () => {
     <div>
       <div className="content-header">
         <h1>Students</h1>
-        <button onClick={fetchStudents} className="btn">
-          Refresh
-        </button>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button onClick={() => setShowCreateForm(true)} className="btn">
+            Create New Student
+          </button>
+          <button onClick={fetchStudents} className="btn">
+            Refresh
+          </button>
+        </div>
       </div>
+
+      {showCreateForm && (
+        <div className="form-container" style={{ marginBottom: '20px' }}>
+          <h2>Create New Student</h2>
+          <form onSubmit={handleCreateStudent}>
+            <div className="form-row">
+              <div className="form-group">
+                <label>Username *</label>
+                <input
+                  type="text"
+                  value={createForm.username}
+                  onChange={(e) => setCreateForm({...createForm, username: e.target.value})}
+                  required
+                  placeholder="Enter username"
+                />
+              </div>
+              <div className="form-group">
+                <label>Email *</label>
+                <input
+                  type="email"
+                  value={createForm.email}
+                  onChange={(e) => setCreateForm({...createForm, email: e.target.value})}
+                  required
+                  placeholder="Enter email address"
+                />
+              </div>
+            </div>
+            
+            <div className="form-group">
+              <label>Password *</label>
+              <input
+                type="password"
+                value={createForm.password}
+                onChange={(e) => setCreateForm({...createForm, password: e.target.value})}
+                required
+                placeholder="Enter password (min 6 characters)"
+                minLength="6"
+              />
+            </div>
+            
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button type="submit" className="btn" disabled={creating}>
+                {creating ? 'Creating...' : 'Create Student'}
+              </button>
+              <button 
+                type="button" 
+                onClick={() => {
+                  setShowCreateForm(false);
+                  setCreateForm({ username: '', email: '', password: '' });
+                }}
+                className="btn btn-secondary"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
 
       <div style={{ display: 'flex', gap: '20px' }}>
         <div style={{ flex: 1 }}>
@@ -98,9 +230,23 @@ const Students = () => {
                         handleStudentClick(student);
                       }}
                       className="btn"
-                      style={{ padding: '5px 10px', fontSize: '12px' }}
+                      style={{ padding: '5px 10px', fontSize: '12px', marginRight: '5px' }}
                     >
                       View Activity
+                    </button>
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteStudent(student.id);
+                      }}
+                      className="btn"
+                      style={{ 
+                        padding: '5px 10px', 
+                        fontSize: '12px',
+                        background: '#ff4444'
+                      }}
+                    >
+                      Delete
                     </button>
                   </td>
                 </tr>
