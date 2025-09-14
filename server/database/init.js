@@ -90,7 +90,7 @@ const initializeDatabase = () => {
   const student1Password = bcrypt.hashSync('student123', 10);
   const student2Password = bcrypt.hashSync('student123', 10);
   const student3Password = bcrypt.hashSync('student123', 10);
-  
+  const brianPassword = bcrypt.hashSync('pass123', 10);
   db.run(`
     INSERT OR IGNORE INTO users (username, email, password, role) 
     VALUES ('student1', 'student1@example.com', ?, 'student')
@@ -105,6 +105,11 @@ const initializeDatabase = () => {
     INSERT OR IGNORE INTO users (username, email, password, role) 
     VALUES ('student3', 'student3@example.com', ?, 'student')
   `, [student3Password]);
+
+    db.run(`
+    INSERT OR IGNORE INTO users (username, email, password, role) 
+    VALUES ('brian', 'brian@example.com', ?, 'student')
+  `, [brianPassword]);
 
   console.log('Database initialized successfully');
 };
